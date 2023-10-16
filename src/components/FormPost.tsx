@@ -1,15 +1,33 @@
 'use client'
+
 import { FC } from 'react';
 import { FormInputPost } from '@/types';
 import { useForm, SubmitHandler } from 'react-hook-form'
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { Tag } from "@prisma/client"
 
 interface FormPostProps {
 	submit: SubmitHandler<FormInputPost>
 	isEditing: boolean
+	initialValue?: FormInputPost
+	isLoadingSubmit: boolean
 }
 
-const FormPost: FC<FormPostProps> = ({ submit, isEditing }) => {
-	const { register, handleSubmit } = useForm<FormInputPost>();
+const FormPost: FC<FormPostProps> = ({ submit, isEditing, initialValue, isLoadingSubmit }) => {
+	const { register, handleSubmit } = useForm<FormInputPost>({
+		defaultValues: initialValue
+	});
+
+	// fetch list tags
+	const { data: dataTags, isLoading: isLoadingTags } = useQuery<Tag[]>({
+		queryKey: ['tags'],
+		queryFn: async () => {
+			const response = await axios.get('/api/tags');
+			return response.data
+		}
+	});
+	console.log(dataTags)
 
 	return (
 		<form
@@ -27,18 +45,30 @@ const FormPost: FC<FormPostProps> = ({ submit, isEditing }) => {
 				className="textarea textarea-bordered w-full max-w-lg" placeholder="Post content..."
 			></textarea>
 
-			<select 
-				{...register("tags", { required: true })} 
+			{isLoadingTags ?
+				<span className="loading loading-bars loading-md"></span> :
+				(<select
+					{...register("tagId", { required: true })} 
 				className="select select-bordered w-full max-w-lg"
 				defaultValue={''}
 				>
 					<option disabled value="">Select tags</option>
-					<option value="Python">Python</option>
-					<option value="JavaScipt">JavaScript</option>
-			</select>
+					{dataTags?.map((item) => (
+						<option key={item.id} value={item.id}>{item.name}</option>
+					))}
+				</select>)
+			}
 
 			<button type='submit' className='btn btn-primary w-full max-w-lg'>
-				{isEditing ? 'Update' : 'Create'}
+				{isLoadingSubmit && <span className='loading loading-spinner'></span>}
+				{isEditing 
+					? isLoadingSubmit
+						? 'Updating...' 
+						: 'Update'
+					: isLoadingSubmit
+						? 'Creating...'
+						: 'Create'
+				}
 			</button>
 		</form>
 	)
