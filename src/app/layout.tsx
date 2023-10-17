@@ -1,5 +1,5 @@
 import Navbar from '@/components/Navbar'
-import './globals.css'
+import './globals.css';
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Providers from '@/components/Providers'
@@ -21,7 +21,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
           <Navbar />
-          <div className='container h-full pt-12'>
+          <div className="container h-full pt-12 flex flex-col justify-center items-center">
             {children}
           </div>
         </Providers>
