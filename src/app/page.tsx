@@ -24,7 +24,7 @@ export default async function Home() {
   console.log(posts);
 
   const session = await getServerSession(authOptions)
-  console.log(session)
+  console.log('session: ', session)
 
   if (!session) {
     return (

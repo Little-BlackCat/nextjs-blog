@@ -6,7 +6,7 @@ import UserAccountNav from './UserAccountNav'
 
 const Navbar = async () => {
 	const session = await getServerSession(authOptions)
-
+	console.log(session)
 	if (session) {
 		return (
 			<div className="navbar bg-neutral-100">
