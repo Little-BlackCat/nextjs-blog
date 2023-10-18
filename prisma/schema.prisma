@@ -24,4 +24,16 @@ model Post {
   updatedAt DateTime @updatedAt
   tagId     String
   tag       Tag      @relation(fields: [tagId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts     Post[]
 }

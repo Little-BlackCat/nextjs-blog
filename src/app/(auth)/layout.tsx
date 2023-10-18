@@ -6,7 +6,9 @@ interface AuthLayoutProps {
 
 const AuthLayout: FC<AuthLayoutProps> = ({ children }) => {
 	return (
-		<div className="bg-slate-200 p-10 rounded-md">{children}</div>
+		<div className="flex flex-col justify-center items-center">
+			<div className="bg-slate-200 p-10 rounded-md">{children}</div>
+		</div>
 	)
 }
 

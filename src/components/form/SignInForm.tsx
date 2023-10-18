@@ -5,6 +5,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from "zod"
 import Link from 'next/link';
 import GoogleSignInButton from '../GoogleSignInButton';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { ErrorAlert } from '../Alert';
 
 const FormSchema = z.object({
 	email: z
@@ -22,6 +26,8 @@ const FormSchema = z.object({
 })
 
 const SignInForm = () => {
+	const router = useRouter();
+	const [error, setError] = useState<boolean>(false);
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
@@ -30,8 +36,21 @@ const SignInForm = () => {
 		},
 	})
 
-	function onSubmit (values: z.infer<typeof FormSchema>) {
-		console.log(values)
+	async function onSubmit (values: z.infer<typeof FormSchema>) {
+		const signInData = await signIn('credentials', {
+			email: values.email,
+			password: values.password,
+			redirect: false,
+		});
+		
+		if (signInData?.error) {
+			console.error(signInData.error)
+			setError(true);
+		} else {
+			setError(false);
+			router.refresh();
+			router.push("/");
+		}
 	}
 
 	return (
@@ -79,7 +98,7 @@ const SignInForm = () => {
 					</>
 				)}
 			/>
-
+			{error && <ErrorAlert />}
 			<button type="submit" className="btn btn-neutral mt-4 w-full">Sign in</button>
 			<div className="mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400">
 				or
