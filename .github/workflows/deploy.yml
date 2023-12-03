@@ -24,7 +24,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: NPM install
-        run: prisma generate && npm install
+        run: npm install && prisma generate
       - name: Build
         run: |
           npm run build
