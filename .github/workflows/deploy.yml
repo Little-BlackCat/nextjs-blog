@@ -27,7 +27,7 @@ jobs:
         run: npm install
       - name: Build
         run: |
-          prisma generate && npm run build
+          npm run build
           npm run export
 
       - name: Deploy
