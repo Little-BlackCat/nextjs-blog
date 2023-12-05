@@ -25,6 +25,13 @@ jobs:
 
       - name: NPM install
         run: npm install
+
+      - name: Debug DATABASE_URL
+        run: echo $DATABASE_URL
+
+      - name: Run Prisma Migrate
+        run: npx prisma migrate deploy
+      
       - name: Build
         run: |
           npm run build
