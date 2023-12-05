@@ -30,7 +30,6 @@ jobs:
         run: echo ${{ vars.DATABASE_URL }}
 
       - name: Run Prisma Migrate
-        env: ${{ vars.DATABASE_URL }}
         run: npx prisma migrate deploy
       
       - name: Build
