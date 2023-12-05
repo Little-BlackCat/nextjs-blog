@@ -27,9 +27,10 @@ jobs:
         run: npm install
 
       - name: Debug DATABASE_URL
-        run: echo $DATABASE_URL
+        run: echo ${{ vars.DATABASE_URL }}
 
       - name: Run Prisma Migrate
+        env: ${{ vars.DATABASE_URL }}
         run: npx prisma migrate deploy
       
       - name: Build
